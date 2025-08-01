@@ -1,7 +1,20 @@
-# PC Care Package
+# Windows 11 PC Care Package
+
+## Scope
+This script is intended to automate much of the setup process of a new Windows 11 PC.
+
+> [!Caution]
+> **Use with caution**
+> This script is untested as of 2025-08-01 and is a modification of a similar Windows 10 setup script which caused breaking changes under Windows 11.
+> Run with the knowledge this may break your system without prior testing.
+
+## Currently Planned Additions
+- [ ] Test function of script
+- [ ] Add standard application installs utilizing WinGet
+
+---
 
 ## What This Script Does
-
 🛡️ Administrative Elevation
 - Checks for admin rights and relaunches with elevation if needed.
 
