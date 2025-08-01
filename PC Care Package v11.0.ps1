@@ -59,6 +59,31 @@ function Menu {
     Write-Output $($menuItems[$pos])
 }
 
+function Uninstall-App {
+## Example Usage: Uninstall-App "Dell SupportAssist"
+    Write-Host "Uninstalling $($args[0])" -fore Green -back Black
+    foreach($obj in Get-ChildItem "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall") {
+        $dname = $obj.GetValue("DisplayName")
+        if ($dname -contains $args[0]) {
+            $uninstString = $obj.GetValue("UninstallString")
+            foreach ($line in $uninstString) {
+                $found = $line -match '(\{.+\}).*'
+                If ($found) {
+                    $appid = $matches[1]
+                    Write-Output $appid
+                    start-process "msiexec.exe" -arg "/X $appid /qb" -Wait
+                }
+		else {
+		    Write-Host "$dname could not be uninstalled automatically." -fore Green -back Black
+		}
+            }
+        }
+	else {
+            Write-Host "$($args[0]) was not found for uninstall." -fore Green -back Black
+	}
+    }
+}
+
 function RegSetUser {
     ## Disable start menu suggestions
         reg add "$reglocation\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /T REG_DWORD /V "SystemPaneSuggestionsEnabled" /D 0 /F
