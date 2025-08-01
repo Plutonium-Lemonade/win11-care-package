@@ -96,14 +96,14 @@ function RegSetUser {
 }
 
 function loaddefaulthive {
-## Loads "Default" user profile
-    reg load "$reglocation" c:\users\default\ntuser.dat
+    ## Loads "Default" user profile
+        reg load "$reglocation" c:\users\default\ntuser.dat
 }
 
 function unloaddefaulthive {
-## Unloads "Default" user profile
-    [gc]::collect()
-    reg unload "$reglocation"
+    ## Unloads "Default" user profile
+        [gc]::collect()
+        reg unload "$reglocation"
 }
 
 
@@ -125,17 +125,17 @@ function unloaddefaulthive {
 
 
 ## Rename Computer
-    write-Host "Input new computer name:" -ForegroundColor Cyan -BackgroundColor Black -NoNewline
-    write-Host " " -NoNewline
-    $name = Read-Host
-    if ($name -notlike $env:computername) {
-        write-Host "***Renaming computer***" -ForegroundColor Green -BackgroundColor Black
-        Rename-Computer -NewName $name
-    }
-    else {
-        write-Host "That's already the name of this computer!" -ForegroundColor Green -BackgroundColor Black
-        Start-Sleep -S 2
-    }
+write-Host "Input new computer name:" -ForegroundColor Cyan -BackgroundColor Black -NoNewline
+write-Host " " -NoNewline
+$newComputerName = Read-Host
+if ($newComputerName -notlike $env:computername) {
+    write-Host "***Renaming computer***" -ForegroundColor Green -BackgroundColor Black
+    Rename-Computer -NewName $newComputerName
+}
+else {
+    write-Host "That's already the name of this computer!" -ForegroundColor Green -BackgroundColor Black
+    Start-Sleep -S 2
+}
 
 ## Local ISCadmin user definition
 $Username = "iscadmin"
@@ -336,7 +336,7 @@ write-Host "                     Business Computer Solutions /___/       " -Fore
 write-Host "                                                             " -ForegroundColor Black -BackgroundColor Black
 write-Host "      Don't forget to run updates and install LOB apps       " -ForegroundColor Cyan -BackgroundColor Black
 write-Host "      Startup and Recovery options also need to be set.      " -ForegroundColor Cyan -BackgroundColor Black
-write-Host "      Please finish any running installations and restart.   "ù -ForegroundColor Cyan -BackgroundColor Black
+write-Host "      Please finish any running installations and restart.   "¬ù -ForegroundColor Cyan -BackgroundColor Black
 write-Host "            *******(Press any key to exit)*******            " -ForegroundColor White -BackgroundColor Black -NoNewline
 
 $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
