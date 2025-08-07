@@ -3,6 +3,7 @@
 ###########################
 
 
+## Requests admin permissions and re-launches script with execution policy set to "bypass" to allow easier script function
 write-Host "***Requesting elevated permissions***" -ForegroundColor Green -BackgroundColor Black
 If (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]"Administrator")) {
     Start-Process powershell.exe "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
@@ -136,9 +137,12 @@ function unloaddefaulthive {
 ## Begin Menu Sequence ##
 #########################
 
+## Reserved space for setting environment variables via menu sequence.
+##
 ## Menu Usage Example: 
 ## $activatemenu = "No","Yes"
 ## $activate = Menu $activatemenu "Activate Windows?" -ForegroundColor Cyan -BackgroundColor Black -NoNewline
+##
 ## if ($activate -match "Yes") {
 ##    Do This
 ## }
@@ -150,7 +154,7 @@ function unloaddefaulthive {
 
 
 ## Rename Computer
-write-Host "Input new computer name:" -ForegroundColor Cyan -BackgroundColor Black -NoNewline
+write-Host "Input new computer name (press enter to skip):" -ForegroundColor Cyan -BackgroundColor Black -NoNewline
 write-Host " " -NoNewline
 $newComputerName = Read-Host
 if ($newComputerName -notlike $env:computername) {
@@ -209,12 +213,11 @@ else {
 }
 
 write-Host "***Setting password for $Username to never expire***" -ForegroundColor Green -BackgroundColor Black
-& WMIC USERACCOUNT WHERE "Name='$Username'" SET PasswordExpires=FALSE
-}
+	& WMIC USERACCOUNT WHERE "Name='$Username'" SET PasswordExpires=FALSE
 
 ## Sets PC to not auto-reboot on crash
 write-Host "***Setting policy for no auto-reboot on BSOD***" -ForegroundColor Green -BackgroundColor Black
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /t REG_DWORD /v AutoReboot /d 0 /f
+	reg add "HKLM\SYSTEM\CurrentControlSet\Control\CrashControl" /t REG_DWORD /v AutoReboot /d 0 /f
 
 
 #######################
@@ -350,8 +353,39 @@ write-Host "***Disabling Telemetry***" -ForegroundColor Green -BackgroundColor B
 write-Host "***Enabling F8 boot menu options***" -ForegroundColor Green -BackgroundColor Black
     bcdedit /set `{current`} bootmenupolicy Legacy | Out-Null
 
+
+#############
+## Cleanup ##
+#############
+
+
 ## Sets PWSH Script policy back to default of "undefined"
 Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Undefined -Force
+
+
+##########################
+## Applications Install ##
+##########################
+
+
+## Install applications utilizing winget. May rework into a function for cleaner execution and easier edits.
+write-Host "Installing Adobe Acrobat" -ForegroundColor Green -BackgroundColor Black
+winget install --id Adobe.Acrobat.Reader.64-bit --silent --accept-package-agreements --accept-source-agreements
+
+
+############################
+## Applications Uninstall ##
+############################
+
+
+## Uninstall applications using the "Uninstall-App" function
+Uninstall-App "Dell SupportAssist"
+
+
+###################
+## End of Script ##
+###################
+
 
 write-Host "       _____________                   ____                  " -ForegroundColor Green -BackgroundColor Black
 write-Host "      /  _/ __/ ___/__  ___  ___ __ __/ / /_ _ __  ___ _     " -ForegroundColor Green -BackgroundColor Black
