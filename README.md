@@ -6,12 +6,12 @@ This script is intended to automate much of the setup process of a new Windows 1
 
 > [!Caution]
 > **Use with caution**
-> This script is untested as of 2025-08-01 and is a modification of a similar Windows 10 setup script which caused breaking changes under Windows 11.
+> This script has verified breaking changes as of v11.1.1. These are believed to be resolved with v11.1.2 but further testing is required.
 > Run with the knowledge this may break your system without prior testing.
 
 
 ## Currently Planned Additions
-- [x] Test function of script
+- [ ] Test function of script
 - [x] Add standard application installs utilizing WinGet
 - [ ] Add multiple choice menu for refining app install scope
 - [ ] Add ODT support for standalone MSOffice installations with a selector at start
