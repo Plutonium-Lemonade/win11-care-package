@@ -263,7 +263,7 @@ write-Host "***Setting Lid Close Actions***" -ForegroundColor Green -BackgroundC
         powercfg /S $guid
     }
     else {
-        write-Host “Failed to extract valid GUID from active power scheme. Lid actions not set.” -ForegroundColor Red -BackgroundColor Black
+        write-Host "Failed to extract valid GUID from active power scheme. Lid actions not set." -ForegroundColor Red -BackgroundColor Black
     }
 
 write-Host "***Disabling Fast-Boot***" -ForegroundColor Green -BackgroundColor Black
@@ -426,4 +426,5 @@ write-Host "            *******(Press any key to exit)*******            " -Fore
 $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 sysdm.cpl /,3
 Exit
+
 
