@@ -3,14 +3,18 @@
 ## Scope
 This script is intended to automate much of the setup process of a new Windows 11 PC.
 
+
 > [!Caution]
 > **Use with caution**
 > This script is untested as of 2025-08-01 and is a modification of a similar Windows 10 setup script which caused breaking changes under Windows 11.
 > Run with the knowledge this may break your system without prior testing.
 
+
 ## Currently Planned Additions
-- [ ] Test function of script
-- [ ] Add standard application installs utilizing WinGet
+- [x] Test function of script
+- [x] Add standard application installs utilizing WinGet
+- [ ] Add multiple choice menu for refining app install scope
+- [ ] Add ODT support for standalone MSOffice installations with a selector at start
 
 ---
 
@@ -34,10 +38,11 @@ This script is intended to automate much of the setup process of a new Windows 1
 
 🔋 Power Settings
 - Disables hibernation, standby/sleep on AC power, and Fast Boot.
+- Sets lid-close actions for the active power profile to do nothing on AC and sleep on battery.
 
 🧹 System Cleanup & Debloat
 - Disables “consumer features” and silent app installs.
-- Removes most built-in apps for all users (preserving only essentials like Calculator, Photos, Paint, etc.).
+- Removes most built-in apps for all users (preserving only essentials like Calculator, Terminal, Notepad, Photos, Paint, etc.).
 - Disables:
 	- Xbox DVR
  	- Featured software installs
@@ -73,6 +78,9 @@ This script is intended to automate much of the setup process of a new Windows 1
 - Sets system timezone to Eastern Standard Time (EST).
 - Enables F8 Boot Menu (legacy boot options).
 - Sets PowerShell script execution policy back to Undefined prior to exiting.
+
+⬇️ Application Installs
+- Installs Adobe Acrobat DC, Google Chrome, Firefox, and Office 365 Apps
 
 ✅ Final Prompts and Reminders
 - ASCII art outro with reminders to:
