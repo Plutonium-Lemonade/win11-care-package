@@ -247,8 +247,24 @@ write-Host "***Changing default Explorer view to 'This PC'***" -ForegroundColor 
 write-Host "***Disabling hibernate***" -ForegroundColor Green -BackgroundColor Black
     Start-Process 'powercfg.exe' -Verb runAs -ArgumentList '/h off'
 
-write-Host "***Disabling standby/sleep on AC power***" -ForegroundColor Green -BackgroundColor Black
+write-Host "***Setting Standby/Sleep Timeouts***" -ForegroundColor Green -BackgroundColor Black
     powercfg -change -standby-timeout-ac 0
+	powercfg -change -monitor-timeout-ac 15
+    powercfg -change -standby-timeout-dc 30
+	powercfg -change -monitor-timeout-dc 15
+
+write-Host "***Setting Lid Close Actions***" -ForegroundColor Green -BackgroundColor Black
+    $powerSchemeOutput = powercfg /getactivescheme
+    $guidMatch = $powerSchemeOutput | Select-String -Pattern 'GUID:\s+([A-F0-9\-]+)'
+    if ($guidMatch) {
+        $guid = $guidMatch.Matches[0].Groups[1].Value.Trim()
+        powercfg /SETACVALUEINDEX $guid SUB_BUTTONS LIDACTION 3
+        powercfg /SETDCVALUEINDEX $guid SUB_BUTTONS LIDACTION 1
+        powercfg /S $guid
+    }
+    else {
+        write-Host “Failed to extract valid GUID from active power scheme. Lid actions not set.” -ForegroundColor Red -BackgroundColor Black
+    }
 
 write-Host "***Disabling Fast-Boot***" -ForegroundColor Green -BackgroundColor Black
     reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /t REG_DWORD /v HiberbootEnabled /d 0 /f
@@ -266,8 +282,8 @@ write-Host "***Setting up the advertising dumpster***" -ForegroundColor Green -B
 
 ## Removes most "junk apps" and prevents all from being installed on new profiles (exclusions listed)
 write-Host "***Taking out the trash***" -ForegroundColor Green -BackgroundColor Black
-    Get-AppxPackage -AllUsers | where-object {$_.name -notlike "*Store*" -and $_.name -notlike "*Dell*" -and $_.name -notlike "*HP*" -and $_.name -notlike "*Calculator*" -and $_.name -notlike "*Windows.Photos*" -and $_.name -notlike "*SoundRecorder*" -and $_.name -notlike "*MSPaint*" -and $_.name -notlike "*Calendar*" -and $_.name -notlike "*windowscommunicationsapps" -and $_.name -notlike "*Camera*"} | Remove-AppxPackage -erroraction silentlycontinue
-    Get-AppxProvisionedPackage -online | where-object {$_.displayname -notlike "*Store*" -and $_.displayname -notlike "*Dell*" -and $_.displayname -notlike "*HP*" -and $_.displayname -notlike "*Calculator*" -and $_.displayname -notlike "*Windows.Photos*" -and $_.displayname -notlike "*SoundRecorder*"  -and $_.displayname -notlike "*MSPaint*" -and $_.displayname -notlike "*Calendar*" -and $_.displayname -notlike "*windowscommunicationsapps" -and $_.name -notlike "*Camera*"} | Remove-AppxProvisionedPackage -online -erroraction silentlycontinue
+    Get-AppxPackage -AllUsers | where-object {$_.displayname -notlike "*Store*" -and $_.displayname -notlike "*Dell*"  -and $_.displayname -notlike "*HP*" -and $_.displayname -notlike "*Notepad*" -and $_.displayname -notlike "*Terminal*" -and $_.displayname -notlike "*heic*" -and $_.displayname -notlike "*hevc*" -and $_.displayname -notlike "*webp*" -and $_.displayname -notlike "*Calculator*" -and $_.displayname -notlike "*Windows.Photos*" -and $_.displayname -notlike "*SoundRecorder*"  -and $_.displayname -notlike "*MSPaint*" -and $_.displayname -notlike "*Calendar*" -and $_.displayname -notlike "*windowscommunicationsapps" -and $_.name -notlike "*Camera*"} | Remove-AppxPackage -erroraction silentlycontinue
+    Get-AppxProvisionedPackage -online | where-object {$_.displayname -notlike "*Store*" -and $_.displayname -notlike "*Dell*"  -and $_.displayname -notlike "*HP*" -and $_.displayname -notlike "*Notepad*" -and $_.displayname -notlike "*Terminal*" -and $_.displayname -notlike "*heic*" -and $_.displayname -notlike "*hevc*" -and $_.displayname -notlike "*webp*" -and $_.displayname -notlike "*Calculator*" -and $_.displayname -notlike "*Windows.Photos*" -and $_.displayname -notlike "*SoundRecorder*"  -and $_.displayname -notlike "*MSPaint*" -and $_.displayname -notlike "*Calendar*" -and $_.displayname -notlike "*windowscommunicationsapps" -and $_.name -notlike "*Camera*"} | Remove-AppxProvisionedPackage -online -erroraction silentlycontinue
 
 write-Host "***Disabling 'Featured Software'***" -ForegroundColor Green -BackgroundColor Black
     reg add	"HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /T REG_DWORD /V "EnableFeaturedSoftware" /D 0 /F
@@ -372,14 +388,23 @@ Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Undefined -Force
 write-Host "Installing Adobe Acrobat" -ForegroundColor Green -BackgroundColor Black
 winget install --id Adobe.Acrobat.Reader.64-bit --silent --accept-package-agreements --accept-source-agreements
 
+write-Host "Installing Google Chrome" -ForegroundColor Green -BackgroundColor Black
+winget install --id Google.Chrome --silent --accept-package-agreements --accept-source-agreements
+
+write-Host "Installing Mozilla Firefox" -ForegroundColor Green -BackgroundColor Black
+winget install --id Mozilla.Firefox --silent --accept-package-agreements --accept-source-agreements
+
+write-Host "Installing Microsoft Office 365" -ForegroundColor Green -BackgroundColor Black
+winget install --id Microsoft.Office --silent --accept-package-agreements --accept-source-agreements
+
 
 ############################
 ## Applications Uninstall ##
 ############################
 
 
-## Uninstall applications using the "Uninstall-App" function
-Uninstall-App "Dell SupportAssist"
+## Uninstall applications using the "Uninstall-App" function -- Currently non-functional. Commented out for now until the function is reworked.
+## Uninstall-App "Dell SupportAssist"
 
 
 ###################
@@ -401,3 +426,4 @@ write-Host "            *******(Press any key to exit)*******            " -Fore
 $key = $host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 sysdm.cpl /,3
 Exit
+
